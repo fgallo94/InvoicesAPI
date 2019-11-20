@@ -1,12 +1,14 @@
 package com.fgallo94.invoices.service;
 
 import com.fgallo94.invoices.entity.InvoiceResponse;
+import com.fgallo94.invoices.entity.InvoiceStatus;
 import com.fgallo94.invoices.exception.InvoiceNotFoundException;
 import com.fgallo94.invoices.repository.InvoiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -47,6 +49,24 @@ public class InvoiceService {
                     invoiceResponseNew.setInternalCode(id);
                     return invoiceRepository.save(invoiceResponseNew);
                 });
+    }
+
+    public void delete(Long id) {
+        InvoiceResponse invoiceResponse = invoiceRepository.findById(id)
+                .orElseThrow(() -> new InvoiceNotFoundException(id));
+        invoiceRepository.delete(invoiceResponse);
+    }
+
+    public InvoiceResponse finalizeInvoice(Long id) throws InvoiceNotFoundException {
+        return invoiceRepository.findById(id)
+                .map(invoiceResponse -> {
+                    invoiceResponse.setInvoiceStatus(new InvoiceStatus());
+                    invoiceResponse.getInvoiceStatus()
+                            .setFinalizedAt(LocalDateTime.now());
+                    invoiceRepository.save(invoiceResponse);
+                    return invoiceResponse;
+                })
+                .orElseThrow(() -> new InvoiceNotFoundException(id));
     }
 }
 

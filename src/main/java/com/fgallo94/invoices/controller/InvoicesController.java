@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,6 +50,26 @@ public class InvoicesController {
         try {
             InvoiceResponse invoiceResponse = invoiceService.getById(id);
             return new ResponseEntity<>(invoiceResponse, HttpStatus.FOUND);
+        } catch (InvoiceNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<InvoiceResponse> deleteInvoice(@PathVariable Long id) {
+        try {
+            invoiceService.delete(id);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        } catch (InvoiceNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @PostMapping("/{id}/finalize")
+    public ResponseEntity<InvoiceResponse> finalizeInvoice(@PathVariable Long id) {
+        try {
+            InvoiceResponse invoice = invoiceService.finalizeInvoice(id);
+            return new ResponseEntity<>(invoice, HttpStatus.CREATED);
         } catch (InvoiceNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

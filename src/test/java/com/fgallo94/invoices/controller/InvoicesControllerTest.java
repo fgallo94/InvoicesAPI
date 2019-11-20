@@ -4,6 +4,7 @@ package com.fgallo94.invoices.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fgallo94.invoices.entity.Invoice;
 import com.fgallo94.invoices.entity.InvoiceResponse;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import static org.hamcrest.core.Is.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -27,8 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 class InvoicesControllerTest {
 
-    // DELETE /invoices/{id}
-    // POST /invoices/{id}/finalize
     // POST /invoices/{id}/pay
     @Autowired
     private WebApplicationContext wac;
@@ -75,7 +75,7 @@ class InvoicesControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(invoice)))
                 .andExpect(status().isCreated());
-        MvcResult result = mockMvc.perform(get("/invoices/1"))
+        MvcResult result = mockMvc.perform(get("/invoices/3"))
                 .andExpect(status().isFound())
                 .andReturn();
         String content = result.getResponse()
@@ -136,5 +136,38 @@ class InvoicesControllerTest {
                 .content(mapper.writeValueAsString(invoiceResponse)))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$.character", is("B")));
+    }
+
+    // DELETE /invoices/{id}
+    @Test
+    void whenDeleteInvoice_withId_thenReturnCorrectStatus() throws Exception {
+        mockMvc.perform(post("/invoices/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(invoice)))
+                .andExpect(status().isCreated());
+        mockMvc.perform(delete("/invoices/1"))
+                .andExpect(status().isAccepted());
+    }
+
+    // DELETE /invoices/{id}
+    @Test
+    void whenDeleteInvoice_withFailedId_thenReturnCorrectStatus() throws Exception {
+        mockMvc.perform(delete("/invoices/12512521124"))
+                .andExpect(status().isNoContent());
+    }
+
+    // POST /invoices/{id}/finalize
+    @Test
+    void whenFinalizeAnInvoice_withCorrectId_thenReturnInvoice() throws Exception {
+        mockMvc.perform(post("/invoices/2/finalize"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.invoiceStatus.finalizedAt").isNotEmpty());
+    }
+
+    // POST /invoices/{id}/finalize
+    @Test
+    void whenFinalizeAnInvoice_withFailedId_thenReturnInvoice() throws Exception {
+        mockMvc.perform(post("/invoices/12312412/finalize"))
+                .andExpect(status().isNoContent());
     }
 }

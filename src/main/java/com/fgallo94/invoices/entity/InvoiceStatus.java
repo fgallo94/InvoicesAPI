@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @Setter
 @EqualsAndHashCode
 @Entity
-class InvoiceStatus {
+public class InvoiceStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore

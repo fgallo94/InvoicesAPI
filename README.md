@@ -7,10 +7,11 @@ Can be used also with ShopWallet repository.
 
 *   ### Invoices Controller
 
-End-point       | Http Method | Description
-----------------|-------------|-------------
-/invoices/      | POST        | Save an invoice
-/invoices/{id}  | GET         | Get an Invoice by Id
-/invoices/      | GET         | Get all invoices
-/invoices/{id}  | POST        | Update a specific invoice
+End-point               | Http Method | Description
+------------------------|-------------|-------------
+/invoices/              | POST        | Save an invoice
+/invoices/              | GET         | Get all invoices
+/invoices/{id}          | GET         | Get an Invoice by Id
+/invoices/{id}          | POST        | Update a specific invoice
+/invoices/{id}/finalize | POST        | Finalize a specific invoice
 
