@@ -2,6 +2,7 @@ package com.fgallo94.invoices.controller;
 
 import com.fgallo94.invoices.entity.Invoice;
 import com.fgallo94.invoices.entity.InvoiceResponse;
+import com.fgallo94.invoices.exception.InvoiceNotFinalizedException;
 import com.fgallo94.invoices.exception.InvoiceNotFoundException;
 import com.fgallo94.invoices.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +73,18 @@ public class InvoicesController {
             return new ResponseEntity<>(invoice, HttpStatus.CREATED);
         } catch (InvoiceNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @PostMapping("/{id}/pay")
+    public ResponseEntity<InvoiceResponse> payInvoice(@PathVariable Long id) {
+        try {
+            InvoiceResponse invoice = invoiceService.payInvoice(id);
+            return new ResponseEntity<>(invoice, HttpStatus.CREATED);
+        } catch (InvoiceNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (InvoiceNotFinalizedException ex) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 }

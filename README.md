@@ -14,4 +14,4 @@ End-point               | Http Method | Description
 /invoices/{id}          | GET         | Get an Invoice by Id
 /invoices/{id}          | POST        | Update a specific invoice
 /invoices/{id}/finalize | POST        | Finalize a specific invoice
-
+/invoices/{id}/pay      | POST        | Pay a finalized Invoice

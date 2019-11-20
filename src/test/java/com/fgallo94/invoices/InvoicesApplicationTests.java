@@ -6,9 +6,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class InvoicesApplicationTests {
 
-	@Test
-	void contextLoads() {
-			InvoicesApplication.main(new String[] {});
-	}
+    @Test
+    void contextLoads() {
+        InvoicesApplication.main(new String[]{});
+    }
 
 }

@@ -1,9 +1,12 @@
 package com.fgallo94.invoices.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -11,6 +14,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.time.LocalDateTime;
@@ -25,7 +29,6 @@ import java.util.Objects;
 public class InvoiceResponse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     private long internalCode;
     private Long number;
     private Character character;
@@ -36,7 +39,10 @@ public class InvoiceResponse {
     private Double discount;
     private PayMethod payMethod;
     private Double recharge;
-    @OneToOne(targetEntity = InvoiceStatus.class, mappedBy = "invoiceResponse", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "invoiceStatus", referencedColumnName = "internalCode")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonBackReference
     private InvoiceStatus invoiceStatus;
 
     public InvoiceResponse(Invoice invoice) {
@@ -51,20 +57,10 @@ public class InvoiceResponse {
         this.invoiceStatus = new InvoiceStatus();
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        InvoiceResponse that = (InvoiceResponse) o;
-        return Objects.equals(number, that.number) &&
-                Objects.equals(character, that.character) &&
-                Objects.equals(customerMail, that.customerMail) &&
-                Objects.equals(dateTime, that.dateTime) &&
-                Objects.equals(lines, that.lines) &&
-                Objects.equals(discount, that.discount) &&
-                payMethod == that.payMethod &&
-                Objects.equals(recharge, that.recharge) &&
-                Objects.equals(invoiceStatus, that.invoiceStatus);
+    @JsonIgnore
+    public boolean isFinalized() {
+        return Objects.nonNull(this.getInvoiceStatus()) && Objects.nonNull(this.getInvoiceStatus()
+                .getFinalizedAt());
     }
 
 }

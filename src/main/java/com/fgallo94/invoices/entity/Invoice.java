@@ -18,5 +18,4 @@ public class Invoice {
     private Character character;
     private String customerMail;
     private LocalDateTime dateTime;
-
 }

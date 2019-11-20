@@ -1,7 +1,7 @@
 package com.fgallo94.invoices.service;
 
 import com.fgallo94.invoices.entity.InvoiceResponse;
-import com.fgallo94.invoices.entity.InvoiceStatus;
+import com.fgallo94.invoices.exception.InvoiceNotFinalizedException;
 import com.fgallo94.invoices.exception.InvoiceNotFoundException;
 import com.fgallo94.invoices.repository.InvoiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,11 +60,25 @@ public class InvoiceService {
     public InvoiceResponse finalizeInvoice(Long id) throws InvoiceNotFoundException {
         return invoiceRepository.findById(id)
                 .map(invoiceResponse -> {
-                    invoiceResponse.setInvoiceStatus(new InvoiceStatus());
                     invoiceResponse.getInvoiceStatus()
                             .setFinalizedAt(LocalDateTime.now());
                     invoiceRepository.save(invoiceResponse);
                     return invoiceResponse;
+                })
+                .orElseThrow(() -> new InvoiceNotFoundException(id));
+    }
+
+    public InvoiceResponse payInvoice(Long id) throws InvoiceNotFoundException, InvoiceNotFinalizedException {
+        return invoiceRepository.findById(id)
+                .map(invoiceResponse -> {
+                    if (invoiceResponse.isFinalized()) {
+                        invoiceResponse.getInvoiceStatus()
+                                .setPaidAt(LocalDateTime.now());
+                        invoiceRepository.save(invoiceResponse);
+                        return invoiceResponse;
+                    } else {
+                        throw new InvoiceNotFinalizedException(id);
+                    }
                 })
                 .orElseThrow(() -> new InvoiceNotFoundException(id));
     }
