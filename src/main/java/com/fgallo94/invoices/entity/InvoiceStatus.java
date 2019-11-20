@@ -1,13 +1,11 @@
 package com.fgallo94.invoices.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,7 +19,7 @@ import java.time.LocalDateTime;
 @Setter
 @EqualsAndHashCode
 @Entity
-public class InvoiceStatus {
+class InvoiceStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
@@ -29,6 +27,6 @@ public class InvoiceStatus {
     private LocalDateTime finalizedAt;
     private LocalDateTime paidAt;
     @OneToOne
-    @JoinColumn(name="invoiceResponse")
+    @JoinColumn(name = "invoiceResponse")
     private InvoiceResponse invoiceResponse;
 }

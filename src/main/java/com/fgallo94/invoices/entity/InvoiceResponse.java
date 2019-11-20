@@ -14,7 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,7 +44,7 @@ public class InvoiceResponse {
         this.character = invoice.getCharacter();
         this.customerMail = invoice.getCustomerMail();
         this.dateTime = invoice.getDateTime();
-        this.lines = Arrays.asList(new Lines());
+        this.lines = Collections.singletonList(new Lines());
         this.discount = 0d;
         this.payMethod = PayMethod.CASH;
         this.recharge = 0d;

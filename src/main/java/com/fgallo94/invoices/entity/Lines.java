@@ -1,7 +1,6 @@
 package com.fgallo94.invoices.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,13 +18,13 @@ import javax.persistence.ManyToOne;
 @Setter
 @EqualsAndHashCode
 @Entity
-public class Lines {
+class Lines {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     private long internalCodes;
     @ManyToOne
-    @JoinColumn(name="invoiceResponse")
+    @JoinColumn(name = "invoiceResponse")
     private InvoiceResponse invoiceResponse;
     private String item;
     private String description;

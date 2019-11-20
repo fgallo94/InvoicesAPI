@@ -8,6 +8,7 @@ class InvoicesApplicationTests {
 
 	@Test
 	void contextLoads() {
+			InvoicesApplication.main(new String[] {});
 	}
 
 }
