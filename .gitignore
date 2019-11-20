@@ -2,6 +2,9 @@
 # Project specific excludes
 #
 
+# Maven
+.mvn/
+
 tomcat
 
 #
