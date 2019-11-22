@@ -3,9 +3,13 @@ REST Api for any shop model.
 Made with Spring Boot, H2 Database, Project Lombok and JPA.
 Can be used also with ShopWallet repository.
 
-## End-Points
+## Swagger
 
-*   ### Invoices Controller
+[http://localhost:8080/swagger-ui.html](swagger)
+
+### End-Points
+
+*   #### Invoices Controller
 
 End-point                          | Http Method | Description
 -----------------------------------|-------------|-------------
