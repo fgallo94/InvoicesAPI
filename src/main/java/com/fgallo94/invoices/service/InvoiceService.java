@@ -1,9 +1,11 @@
 package com.fgallo94.invoices.service;
 
 import com.fgallo94.invoices.entity.InvoiceResponse;
+import com.fgallo94.invoices.entity.Lines;
 import com.fgallo94.invoices.exception.InvoiceNotFinalizedException;
 import com.fgallo94.invoices.exception.InvoiceNotFoundException;
 import com.fgallo94.invoices.repository.InvoiceRepository;
+import com.fgallo94.invoices.repository.LinesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,11 @@ public class InvoiceService {
     @Qualifier("invoiceRepository")
     private InvoiceRepository invoiceRepository;
 
+    @Autowired
+    private LinesRepository linesRepository;
+
     public void insert(InvoiceResponse invoiceResponse) {
+        invoiceResponse.setDateTime(LocalDateTime.now());
         invoiceRepository.save(invoiceResponse);
     }
 
@@ -47,6 +53,7 @@ public class InvoiceService {
                 })
                 .orElseGet(() -> {
                     invoiceResponseNew.setInternalCode(id);
+                    invoiceResponseNew.setDateTime(LocalDateTime.now());
                     return invoiceRepository.save(invoiceResponseNew);
                 });
     }
@@ -81,6 +88,56 @@ public class InvoiceService {
                     }
                 })
                 .orElseThrow(() -> new InvoiceNotFoundException(id));
+    }
+
+    public InvoiceResponse addLine(Long id, Lines line) throws InvoiceNotFoundException {
+        return invoiceRepository.findById(id)
+                .map(invoiceResponse -> {
+                    line.setInvoiceResponse(invoiceResponse);
+                    invoiceResponse.getLines()
+                            .add(line);
+                    invoiceRepository.save(invoiceResponse);
+                    return invoiceResponse;
+                })
+                .orElseThrow(() -> new InvoiceNotFoundException(id));
+    }
+
+    public InvoiceResponse deleteLine(Long idInvoice, Long idLine) throws InvoiceNotFoundException {
+        return invoiceRepository.findById(idInvoice)
+                .map(invoiceResponse -> {
+                    invoiceResponse.getLines()
+                            .stream()
+                            .filter(lines -> lines.getInternalCodes() == idLine)
+                            .forEach(lines -> linesRepository.delete(lines));
+                    invoiceRepository.save(invoiceResponse);
+                    return invoiceResponse;
+                })
+                .orElseThrow(() -> new InvoiceNotFoundException(idInvoice));
+    }
+
+    public InvoiceResponse deleteAllLines(Long idInvoice) throws InvoiceNotFoundException {
+        return invoiceRepository.findById(idInvoice)
+                .map(invoiceResponse -> {
+                    invoiceResponse.getLines()
+                            .stream()
+                            .forEach(lines -> linesRepository.delete(lines));
+                    invoiceRepository.save(invoiceResponse);
+                    return invoiceResponse;
+                })
+                .orElseThrow(() -> new InvoiceNotFoundException(idInvoice));
+    }
+
+    public InvoiceResponse updateLine(Long idInvoice, Long idLine, Lines newLine) throws InvoiceNotFoundException {
+        return invoiceRepository.findById(idInvoice)
+                .map(invoiceResponse -> {
+                    invoiceResponse.getLines()
+                            .stream()
+                            .filter(lines -> lines.getInternalCodes() == idLine)
+                            .forEach(lines -> linesRepository.save(newLine));
+                    invoiceRepository.save(invoiceResponse);
+                    return invoiceResponse;
+                })
+                .orElseThrow(() -> new InvoiceNotFoundException(idInvoice));
     }
 }
 

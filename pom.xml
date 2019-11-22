@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.fgallo94</groupId>
     <artifactId>invoices</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0</version>
     <name>invoices</name>
     <description>Demo project for Spring Boot</description>
 
@@ -37,6 +37,10 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <version>5.5.2</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>

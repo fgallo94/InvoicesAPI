@@ -2,6 +2,7 @@ package com.fgallo94.invoices.controller;
 
 import com.fgallo94.invoices.entity.Invoice;
 import com.fgallo94.invoices.entity.InvoiceResponse;
+import com.fgallo94.invoices.entity.Lines;
 import com.fgallo94.invoices.exception.InvoiceNotFinalizedException;
 import com.fgallo94.invoices.exception.InvoiceNotFoundException;
 import com.fgallo94.invoices.service.InvoiceService;
@@ -85,6 +86,46 @@ public class InvoicesController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (InvoiceNotFinalizedException ex) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/{id}/line")
+    public ResponseEntity<InvoiceResponse> addLine(@PathVariable Long id, @RequestBody Lines line) {
+        try {
+            InvoiceResponse invoiceResponse = invoiceService.addLine(id, line);
+            return new ResponseEntity<>(invoiceResponse, HttpStatus.ACCEPTED);
+        } catch (InvoiceNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @DeleteMapping("/{idInvoice}/line/{idLine}")
+    public ResponseEntity<InvoiceResponse> deleteLine(@PathVariable Long idInvoice, @PathVariable Long idLine){
+        try {
+            InvoiceResponse invoiceResponse = invoiceService.deleteLine(idInvoice, idLine);
+            return new ResponseEntity<>(invoiceResponse, HttpStatus.ACCEPTED);
+        } catch (InvoiceNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @DeleteMapping("/{idInvoice}/line")
+    public ResponseEntity<InvoiceResponse> deleteLine(@PathVariable Long idInvoice){
+        try {
+            InvoiceResponse invoiceResponse = invoiceService.deleteAllLines(idInvoice);
+            return new ResponseEntity<>(invoiceResponse, HttpStatus.ACCEPTED);
+        } catch (InvoiceNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @PostMapping("/{idInvoice}/line/{idLine}")
+    public ResponseEntity<InvoiceResponse> updateLine(@PathVariable Long idInvoice, @PathVariable Long idLine, @RequestBody Lines newLine){
+        try {
+            InvoiceResponse invoiceResponse = invoiceService.updateLine(idInvoice, idLine, newLine);
+            return new ResponseEntity<>(invoiceResponse, HttpStatus.ACCEPTED);
+        } catch (InvoiceNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 }
