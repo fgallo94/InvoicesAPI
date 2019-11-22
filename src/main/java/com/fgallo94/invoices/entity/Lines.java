@@ -17,6 +17,9 @@ import javax.persistence.ManyToOne;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+/**
+ * POJO contains information of the InvoiceResponse
+ */
 public class Lines {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

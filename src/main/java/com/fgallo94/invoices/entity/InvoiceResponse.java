@@ -26,19 +26,33 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @Entity
+/**
+ *  POJO
+ *
+ */
 public class InvoiceResponse {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long internalCode;
+
     private Long number;
+
     private Character character;
+
     private String customerMail;
+
     private LocalDateTime dateTime;
+
     @OneToMany(targetEntity = Lines.class, mappedBy = "invoiceResponse", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Lines> lines;
+
     private Double discount;
+
     private PayMethod payMethod;
+
     private Double recharge;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "invoiceStatus", referencedColumnName = "internalCode")
     @OnDelete(action = OnDeleteAction.CASCADE)

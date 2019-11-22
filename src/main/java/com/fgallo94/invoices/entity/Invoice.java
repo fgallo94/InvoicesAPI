@@ -13,6 +13,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Setter
+/**
+ * Initial object of the front-end
+ */
 public class Invoice {
     private Long number;
     private Character character;

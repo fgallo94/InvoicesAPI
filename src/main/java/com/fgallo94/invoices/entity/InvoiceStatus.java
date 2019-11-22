@@ -17,6 +17,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
+/**
+ * POJO for the final step of the logic
+ */
 public class InvoiceStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

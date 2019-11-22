@@ -22,6 +22,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("invoices")
+/**
+ * Main controller of the service
+ */
 public class InvoicesController {
 
     @Autowired

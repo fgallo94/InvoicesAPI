@@ -10,6 +10,11 @@ import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import javax.annotation.PostConstruct;
 
+/**
+ * Invoice application for any shop model
+ *
+ * @author fgallo94
+ */
 @SpringBootApplication
 @EntityScan(basePackageClasses = {InvoicesApplication.class, Jsr310JpaConverters.class}, basePackages = {"com.fgallo94.invoices.controller", "com.fgallo94.invoices.entity", "com.fgallo94.invoices.repository", "com.fgallo94.invoices.controller.service"})
 public class InvoicesApplication {
@@ -21,6 +26,9 @@ public class InvoicesApplication {
         SpringApplication.run(InvoicesApplication.class, args);
     }
 
+    /**
+     * Converters for LocalDate and LocalDateTime from Java 8
+     */
     @PostConstruct
     public void setUp() {
         objectMapper.registerModule(new JavaTimeModule());
