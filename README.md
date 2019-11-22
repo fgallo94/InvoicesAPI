@@ -13,6 +13,7 @@ End-point                          | Http Method | Description
 /invoices/                         | GET         | Get all invoices
 /invoices/{id}                     | GET         | Get an Invoice by Id
 /invoices/{id}                     | POST        | Update a specific invoice
+/invoices/{id}                     | DELETE      | Delete a specific invoice
 /invoices/{id}/finalize            | POST        | Finalize a specific invoice
 /invoices/{id}/pay                 | POST        | Pay a finalized Invoice
 /invoices/{id}/line                | POST        | Add a line to invoice
